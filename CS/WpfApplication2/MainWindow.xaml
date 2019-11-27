@@ -1,0 +1,162 @@
+﻿<Window
+    x:Class="WpfApplication2.MainWindow"
+    x:Name="window"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+    xmlns:local="clr-namespace:WpfApplication2"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    Width="1000"
+    Height="870"
+    Title="">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:ItemToBitmapConverter x:Key="itemToBitmapConverter" />
+            <dxc:BrushOverlayConverter x:Key="brushOverlayConverter" />
+            <DoubleAnimation
+                x:Key="ExplodeAnimation"
+                To="0.07"
+                Duration="0:0:0.3" />
+            <DoubleAnimation
+                x:Key="CollapseAnimation"
+                To="0.0"
+                Duration="0:0:0.5" />
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <dxc:ChartControl
+        x:Name="chart"
+        AnimationMode="OnLoad"
+        Background="#FFECE7C8"
+        Padding="50"
+        ToolTipEnabled="False">
+        <dxmvvm:Interaction.Behaviors>
+            <local:PieChartSelectionBehavior
+                    ExpandAnimation="{StaticResource ExplodeAnimation}"
+                    CollapseAnimation="{StaticResource CollapseAnimation}" />
+        </dxmvvm:Interaction.Behaviors>
+        <dxc:ChartControl.Titles>
+            <dxc:Title
+                HorizontalAlignment="Center"
+                Content="Thanksgiving Pie Chart"
+                FontSize="36"
+                FontWeight="Bold"
+                Foreground="#FF5C3532" />
+        </dxc:ChartControl.Titles>
+        <dxc:SimpleDiagram2D>
+            <dxc:PieSeries2D
+                ArgumentDataMember="Name"
+                ColorDataMember="Name"
+                DataSource="{Binding Data}"
+                DisplayName="Pie"
+                HoleRadiusPercent="0"
+                LabelsVisibility="True"
+                Rotation="-90"
+                SweepDirection="Clockwise"
+                Margin="50">
+                <dxc:PieSeries2D.Summary>
+                    <dxc:Summary>
+                        <dxc:CountSummaryFunction />
+                    </dxc:Summary>
+                </dxc:PieSeries2D.Summary>
+                <dxc:PieSeries2D.Colorizer>
+                    <dxc:KeyColorColorizer>
+                        <dxc:KeyColorColorizer.Keys>
+                            <System:String>Apple</System:String>
+                            <System:String>Key Lime</System:String>
+                            <System:String>Pumpkin</System:String>
+                            <System:String>Blueberry</System:String>
+                            <System:String>Chocolate</System:String>
+                            <System:String>Pecan</System:String>
+                            <System:String>Cherry</System:String>
+                            <System:String>Lemon Meringue</System:String>
+                            <System:String>Strawberry</System:String>
+                        </dxc:KeyColorColorizer.Keys>
+                        <dxc:KeyColorColorizer.Palette>
+                            <dxc:CustomPalette>
+                                <dxc:CustomPalette.Colors>
+                                    <Color>#82a74b</Color>
+                                    <Color>#bfc24f</Color>
+                                    <Color>#ea832f</Color>
+                                    <Color>#4a76c6</Color>
+                                    <Color>#6d4c41</Color>
+                                    <Color>#795548</Color>
+                                    <Color>#a33f42</Color>
+                                    <Color>#f8c028</Color>
+                                    <Color>#cf4d52</Color>
+                                </dxc:CustomPalette.Colors>
+                            </dxc:CustomPalette>
+                        </dxc:KeyColorColorizer.Palette>
+                    </dxc:KeyColorColorizer>
+                </dxc:PieSeries2D.Colorizer>
+                <dxc:PieSeries2D.Model>
+                    <dxc:CustomPie2DModel>
+                        <dxc:CustomPie2DModel.PointTemplate>
+                            <ControlTemplate>
+                                <Grid>
+                                    <Image>
+                                        <Image.Source>
+                                            <dx:SvgImageSource Uri="Images/Pie.svg" />
+                                        </Image.Source>
+                                    </Image>
+                                    <Ellipse Margin="20" Fill="{Binding PointColor, Converter={StaticResource brushOverlayConverter}}" />
+                                </Grid>
+                            </ControlTemplate>
+                        </dxc:CustomPie2DModel.PointTemplate>
+                    </dxc:CustomPie2DModel>
+                </dxc:PieSeries2D.Model>
+                <dxc:PieSeries2D.Label>
+                    <dxc:SeriesLabel
+                        ConnectorVisible="False"
+                        Indent="20"
+                        TextPattern="{}{V}%">
+                        <dxc:SeriesLabel.ElementTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Grid.Column="1"
+                                    Background="{Binding Color, Converter={StaticResource brushOverlayConverter}}"
+                                    CornerRadius="8,8,8,8"
+                                    Padding="8,5,8,5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Image
+                                            Grid.RowSpan="2"
+                                            Width="32"
+                                            Height="32"
+                                            Margin="0,0,5,0"
+                                            Source="{Binding SeriesPoint.Argument, Converter={StaticResource ResourceKey=itemToBitmapConverter}}" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="14"
+                                            FontWeight="Bold"
+                                            Text="{Binding SeriesPoint.Argument}" />
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            FontSize="12"
+                                            Text="{Binding Text}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </dxc:SeriesLabel.ElementTemplate>
+                    </dxc:SeriesLabel>
+                </dxc:PieSeries2D.Label>
+                <dxc:PieSeries2D.PointAnimation>
+                    <dxc:Pie2DDropInAnimation />
+                </dxc:PieSeries2D.PointAnimation>
+            </dxc:PieSeries2D>
+        </dxc:SimpleDiagram2D>
+    </dxc:ChartControl>
+
+</Window>
