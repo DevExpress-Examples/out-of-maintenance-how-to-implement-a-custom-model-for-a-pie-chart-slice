@@ -9,3 +9,5 @@
 This example shows how to create a custom model for a Pie Series slice.
 
 ![](Images/preview.png)
+
+See [WPF Charting – Customizing a Thanksgiving Pie](https://community.devexpress.com/blogs/analytics/archive/2019/11/27/wpf-charting-customizing-a-thanksgiving-pie.aspx) for more information.
